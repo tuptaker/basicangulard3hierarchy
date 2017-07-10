@@ -1,0 +1,56 @@
+{
+	"name": "Hallie",
+	"relationshiptype":"",
+	"relationships": [{
+			"name": "Janet",
+	        "relationshiptype": "daughter",
+			"relationships": [{
+					"name": "Nick",
+			        "relationshiptype": "son",
+					"relationships": []
+				},
+				{
+					"name": "Jonathan",
+			        "relationshiptype": "son",
+					"relationships": []				  
+				}
+			]
+		},
+		{
+			"name": "Sylvia",
+		    "relationshiptype": "daughter",
+		    "relationships": []
+		},
+		{
+			"name": "Alice",
+		    "relationshiptype": "financial advisor",
+		    "relationships": []
+		},
+		{
+			"name": "Steven",
+		    "relationshiptype": "emergency contact",
+		    "relationships": []
+		},
+		{
+			"name": "Chip",
+		    "relationshiptype": "pet",
+		    "relationships": []
+		},
+		{
+			"name": "Paul",
+		    "relationshiptype": "brother",
+		    "relationships": []
+		},
+		{
+			"name": "Darlene",
+		    "relationshiptype": "sister-in-law",
+		    "relationships": []
+		},
+		{
+			"name": "Arthur",
+		    "relationshiptype": "personal friend",
+		    "relationships": []
+		}						  
+					  
+	]
+}
