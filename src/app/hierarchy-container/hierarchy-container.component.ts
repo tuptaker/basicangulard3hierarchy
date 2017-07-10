@@ -43,7 +43,6 @@ export class HierarchyContainerComponent implements OnInit {
       .append("circle")
       .attr("r", 10)
       .style("fill", d => depthScale(d.depth))
-      .style("stroke", "white")
       .style("stroke-width", "2px");
     d3.select("#treeG").selectAll("line")
       .data(treeData.filter(d => d.parent))
@@ -51,6 +50,8 @@ export class HierarchyContainerComponent implements OnInit {
       .attr("x1", d => d.parent.x)
       .attr("y1", d => d.parent.y)
       .attr("x2", d => d.x)
+      .attr("y2", d => d.y)
+      .style("stroke", "black")
   }
 
 
