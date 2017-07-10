@@ -28,6 +28,7 @@ export class HierarchyContainerComponent implements OnInit {
 
     var treeData = treeChart(this.familyTree).descendants()
     var depthScale = d3.scaleOrdinal().range(["#5EAFC6", "#FE9922", "#93c464", "#75739F"])
+    console.log(treeData)
 
     d3.select("svg")
       .append("g")
@@ -38,7 +39,7 @@ export class HierarchyContainerComponent implements OnInit {
       .enter()
       .append("g")
       .attr("class", "node")
-      .attr("transform", d => "translate(" + d.x + "," + d.y + ")")
+      .attr("transform", d => "translate(" + d.x + "," + (400 -  d.y) + ")")
     d3.selectAll("g.node")
       .append("circle")
       .attr("r", 10)
@@ -48,9 +49,9 @@ export class HierarchyContainerComponent implements OnInit {
       .data(treeData.filter(d => d.parent))
       .enter().insert("line", "g")
       .attr("x1", d => d.parent.x)
-      .attr("y1", d => d.parent.y)
+      .attr("y1", d => 400 - d.parent.y)
       .attr("x2", d => d.x)
-      .attr("y2", d => d.y)
+      .attr("y2", d => 400 - d.y)
       .style("stroke", "black")
   }
 

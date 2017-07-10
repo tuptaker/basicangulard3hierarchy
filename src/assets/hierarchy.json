@@ -13,13 +13,31 @@
 					"name": "Jonathan",
 			        "relationshiptype": "son",
 					"relationships": []				  
+				},
+			    {
+					"name": "Mark",
+			        "relationshiptype": "son",
+					"relationships": []				  
 				}
+				
 			]
 		},
 		{
 			"name": "Sylvia",
 		    "relationshiptype": "daughter",
-		    "relationships": []
+		    "relationships": [
+			    {
+					"name": "Barry",
+			        "relationshiptype": "son",
+					"relationships": [
+			    {
+					"name": "Joyce",
+			        "relationshiptype": "daughter",
+					"relationships": []				  
+				}
+					]				  
+				}
+			]
 		},
 		{
 			"name": "Alice",
