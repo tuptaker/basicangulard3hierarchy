@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HierarchyContainerComponent } from './hierarchy-container/hierarchy-container.component';
 import { DetailDialogComponent } from './detail-dialog/detail-dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import 'hammerjs';
 
 @NgModule({
   declarations: [
