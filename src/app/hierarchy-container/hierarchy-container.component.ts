@@ -1,7 +1,8 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject } from '@angular/core';
 import * as d3 from "d3";
 import { MdDialog } from '@angular/material';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-hierarchy-container',
@@ -11,7 +12,7 @@ import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component'
 export class HierarchyContainerComponent implements OnInit {
   familyTree = {}
 
-  constructor(public dialog: MdDialog) { }
+  constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: any) { }
 
   ngOnInit() {
     d3.json("../../assets/hierarchy.json", data => this.generateTree(data));
@@ -25,13 +26,15 @@ export class HierarchyContainerComponent implements OnInit {
     this.familyTree = d3.hierarchy(data, function (d) {
       return d.relationships;
     })
-        var treeChart = d3.tree();
+    var treeChart = d3.tree();
     treeChart.size([400, 400])
 
     var treeData = treeChart(this.familyTree).descendants()
     var depthScale = d3.scaleOrdinal().range(["#5EAFC6", "#FE9922", "#93c464", "#75739F"])
     console.log(treeData)
-    var that = this;
+
+    /* Save handle to the main angular context so it can be referenced from within d3 context */
+    var angularCtx = this;
 
     d3.select("svg")
       .append("g")
@@ -42,11 +45,13 @@ export class HierarchyContainerComponent implements OnInit {
       .enter()
       .append("g")
       .attr("class", "node")
-      .attr("transform", d => "translate(" + d.x + "," + (400 -  d.y) + ")")
+      .attr("transform", d => "translate(" + d.x + "," + (400 - d.y) + ")")
     d3.selectAll("g.node")
       .append("circle")
-      .on("click", function (){
-        return that.showDialogForFamilyMember(this, that);
+
+      /* pass the main angular context into d3 so angular methods can be called from within d3 context */
+      .on("click", function (selectedNode) {
+        return angularCtx.showDialogForFamilyMember(selectedNode, angularCtx);
       })
       .attr("r", 10)
       .style("fill", d => depthScale(d.depth))
@@ -61,13 +66,18 @@ export class HierarchyContainerComponent implements OnInit {
       .style("stroke", "black")
   }
 
-  showDialogForFamilyMember(context, memberData) {
+  showDialogForFamilyMember(memberData, context) {
     console.log(memberData)
-    let dialogRef = this.dialog.open(DetailDialogComponent);
-    //dialogRef.componentInstance.currentFamilyMember = memberData;
-    dialogRef.afterClosed().subscribe( result => {
-      console.log(result);
-    });
+    setTimeout(() => {
+      let dialogRef = this.dialog.open(DetailDialogComponent, memberData);
+      //dialogRef.componentInstance.selectedMember = memberData;
+
+      /*
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(result);
+      });
+      */
+    }, 0)
   }
 
   highlightPathToRootMember(memberData) {

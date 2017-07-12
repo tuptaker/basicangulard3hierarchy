@@ -1,0 +1,3 @@
+.cdk-overlay-pane, .md-overlay-pane {
+  height: auto !important;
+}

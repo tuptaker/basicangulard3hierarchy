@@ -1,2 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+/* This is for MdDialog. Sometimes, the dialog height gets borked on display but !important below resolve the issue */
+.cdk-overlay-pane, .md-overlay-pane {
+  height: auto !important;
+}
