@@ -39,12 +39,12 @@ export class DetailDialogComponent {
   }
 
   saveChangesAndClose() {
-    var job = { action: "", node: "", newrelation:{}, updatedNode: {}};
+    var job = { action: "", node: "", newNode:{}, updatedNode: {}};
     if (this.editOrAddConfirmationLabel === "Add relation and close") {
       var newNode = { name: this.currTypedNewRelationName, relationshipttype: this.currTypedNewRelationType, relationships: []};
       job.action = "insert"
       job.node = this.data
-      job.newrelation = newNode;
+      job.newNode = newNode;
     }
     if (this.editOrAddConfirmationLabel === "Save changes and close") {
       job.action = "edit"
