@@ -1,7 +1,29 @@
 <h2 md-dialog-title>{{data.name}}</h2>
-<md-dialog-content>Are you sure?</md-dialog-content>
+<md-dialog-content>
+
+  <md-tab-group (selectChange)="updateScreenForCurrentTab($event)">
+    <md-tab label="Edit">
+      <md-input-container>
+        <input mdInput placeholder="Name of relation" value="{{data.name}}">
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <input mdInput placeholder="Relationship type" value="{{data.relationshiptype}}">
+      </md-input-container>
+    </md-tab>
+    <md-tab label="Add New Relation">
+            <md-input-container>
+        <input mdInput placeholder="Name of relation">
+      </md-input-container>
+      <br/>
+      <md-input-container>
+        <input mdInput placeholder="Relationship type">
+      </md-input-container>
+    </md-tab>
+  </md-tab-group>
+</md-dialog-content>
 <md-dialog-actions>
-  <button md-button md-dialog-close>No</button>
-  <!-- Can optionally provide a result for the closing dialog. -->
-  <button md-button>Yes</button>
+  <button md-button (click)="saveChangesAndClose()">{{editOrAddConfirmationLabel}}</button>
+  <button md-button md-dialog-close>Cancel</button>
+  <button md-button *ngIf="deleteButtonIsVisible" (click)="deleteMember()">Delete</button>
 </md-dialog-actions>
