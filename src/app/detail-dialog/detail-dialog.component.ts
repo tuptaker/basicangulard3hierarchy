@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Input, Output, Inject, OnInit } from '@angular/core';
 import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 
 @Component({
@@ -10,11 +10,17 @@ import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 export class DetailDialogComponent {
   editOrAddConfirmationLabel = "Save changes and close";
   deleteButtonIsVisible = true;
+  currTypedNewRelationName: string;
+  currTypedNewRelationType: string;
+  currTypedUpdatedName: string;
+  currTypedUpdatedRelationType: string;
 
   constructor(public dialogRef: MdDialogRef<DetailDialogComponent>, @Inject(MD_DIALOG_DATA) public data: any) { }
 
 
   ngOnInit() {
+    this.currTypedUpdatedName = this.data.name;
+    this.currTypedUpdatedRelationType = this.data.relationshiptype;
   }
 
   close() {
@@ -33,18 +39,18 @@ export class DetailDialogComponent {
   }
 
   saveChangesAndClose() {
-    var job = { action: "", member: "", newrelation:{}};
+    var job = { action: "", node: "", newrelation:{}, updatedNode: {}};
     if (this.editOrAddConfirmationLabel === "Add relation and close") {
-      var newMember = { name: "", relationshipttypes: "", relationships: []};
+      var newNode = { name: this.currTypedNewRelationName, relationshipttype: this.currTypedNewRelationType, relationships: []};
       job.action = "insert"
-      job.member = this.data
-      job.newrelation = newMember;
+      job.node = this.data
+      job.newrelation = newNode;
     }
     if (this.editOrAddConfirmationLabel === "Save changes and close") {
       job.action = "edit"
-      // TODO: get new values from form and figure out how to indicate that node needs to be updated
-      job.member = this.data
-      job.newrelation = newMember;
+      var updatedNode = { name: this.currTypedUpdatedName, relationshiptype: this.currTypedUpdatedRelationType, relationships: []};      
+      job.node = this.data
+      job.updatedNode = updatedNode;
     }
     this.dialogRef.close(job);
   }

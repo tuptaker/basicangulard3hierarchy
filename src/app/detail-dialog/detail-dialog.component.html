@@ -1,29 +1,29 @@
 <h2 md-dialog-title>{{data.name}}</h2>
-<md-dialog-content>
+<div md-dialog-content>
 
   <md-tab-group (selectChange)="updateScreenForCurrentTab($event)">
     <md-tab label="Edit">
       <md-input-container>
-        <input mdInput placeholder="Name of relation" value="{{data.name}}">
+        <input mdInput placeholder="Name of relation" value="{{data.name}}" [(ngModel)]=currTypedUpdatedName>
       </md-input-container>
       <br/>
       <md-input-container>
-        <input mdInput placeholder="Relationship type" value="{{data.relationshiptype}}">
+        <input mdInput placeholder="Relationship type" value="{{data.relationshiptype}}" [(ngModel)]=currTypedUpdatedRelationType>
       </md-input-container>
     </md-tab>
     <md-tab label="Add New Relation">
             <md-input-container>
-        <input mdInput placeholder="Name of relation">
+        <input mdInput placeholder="Name of relation" [(ngModel)]=currTypedNewRelationName>
       </md-input-container>
       <br/>
       <md-input-container>
-        <input mdInput placeholder="Relationship type">
+        <input mdInput placeholder="Relationship type" [(ngModel)]=currTypedNewRelationType>
       </md-input-container>
     </md-tab>
   </md-tab-group>
-</md-dialog-content>
-<md-dialog-actions>
+</div>
+<div md-dialog-actions>
   <button md-button (click)="saveChangesAndClose()">{{editOrAddConfirmationLabel}}</button>
   <button md-button md-dialog-close>Cancel</button>
   <button md-button *ngIf="deleteButtonIsVisible" (click)="deleteMember()">Delete</button>
-</md-dialog-actions>
+</div>

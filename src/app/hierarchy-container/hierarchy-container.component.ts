@@ -12,6 +12,9 @@ import { DOCUMENT } from '@angular/platform-browser';
 export class HierarchyContainerComponent implements OnInit {
   familyTree = { data: { name: "" }, children: null }
   rawFamilyTreeJSON = {}
+  canvasHeight = 700;
+  canvasWidth = 700;
+  treeContainerOffset = 80;
 
   constructor(public dialog: MdDialog, @Inject(DOCUMENT) doc: any) { }
 
@@ -28,12 +31,16 @@ export class HierarchyContainerComponent implements OnInit {
   }
 
   scaffoldTreeVisualization() {
+    var treeWidth = this.canvasWidth - this.treeContainerOffset;
+    var treeHeight = this.canvasHeight - this.treeContainerOffset;
+
     this.familyTree = d3.hierarchy(this.rawFamilyTreeJSON, function (d) {
       return d.relationships;
     })
 
     var treeChart = d3.tree();
-    treeChart.size([400, 400]);
+
+    treeChart.size([treeWidth, treeHeight]);
     var treeData = treeChart(this.familyTree).descendants()
     var depthScale = d3.scaleOrdinal().range(["#5EAFC6", "#FE9922", "#93c464", "#75739F"])
     /* Save handle to the main angular context so it can be referenced from within d3 context */
@@ -44,13 +51,13 @@ export class HierarchyContainerComponent implements OnInit {
     d3.select("svg")
       .append("g")
       .attr("id", "treeG")
-      .attr("transform", "translate(60,20)")
+      .attr("transform", "translate(" + this.treeContainerOffset/2 + "," + this.treeContainerOffset/2 + ")")
       .selectAll("g")
       .data(treeData)
       .enter()
       .append("g")
       .attr("class", "node")
-      .attr("transform", d => "translate(" + d.x + "," + (400 - d.y) + ")")
+      .attr("transform", d => "translate(" + d.x + "," + (treeWidth - d.y) + ")")
 
     var nodes = d3.selectAll("g.node")
       // set unique IDs on the node so we can delete them later
@@ -60,17 +67,22 @@ export class HierarchyContainerComponent implements OnInit {
       .on("click", function (selectedNode) {
         return angularCtx.showDialogForFamilyMember(selectedNode, angularCtx);
       })
-      .attr("r", 10)
+      .attr("r", 15)
       .style("fill", d => depthScale(d.depth))
       .style("stroke-width", "2px")
+
+      d3.selectAll("g.node").append("text")
+      .attr("y", 30)
+      .attr("x", -15)
+      .text(d => d.data.name);
 
     var lines = d3.select("#treeG").selectAll("line")
       .data(treeData.filter(d => d.parent))
       .enter().insert("line", "g")
       .attr("x1", d => d.parent.x)
-      .attr("y1", d => 400 - d.parent.y)
+      .attr("y1", d => treeWidth - d.parent.y)
       .attr("x2", d => d.x)
-      .attr("y2", d => 400 - d.y)
+      .attr("y2", d => treeWidth - d.y)
       .style("stroke", "black")
 
       // set unique IDs on the node so we can delete them later
@@ -82,40 +94,68 @@ export class HierarchyContainerComponent implements OnInit {
     let dialogRef = this.dialog.open(DetailDialogComponent, memberData);
     dialogRef.afterClosed().subscribe(result => {
       if (result.action === "delete") {
-        this.deleteFromTree(result, memberData);
+         this.deleteFromTree(memberData, this.rawFamilyTreeJSON, null, 0);
       }
       if (result.action === "insert") {
-        // TODO
+        this.insertIntoTree(result.member, this.rawFamilyTreeJSON, result.newrelation);
       }
-      if (memberData.action === "edit") {
-        // TODO
+      if (result.action === "edit") {
+        this.updateNodeInTree(result.member, this.rawFamilyTreeJSON, result.updatedMember);
       }
     })
   }
 
-  deleteFromTree(member, memberData) {
-    this.findAndRemove(memberData, this.rawFamilyTreeJSON, null, 0);
+  updateNodeInTree(targetNode, currNode, updatedNode) {
+        var numChildren = 0;
+    if (currNode && currNode.relationships) {
+      numChildren = currNode.relationships.length;
+    }
+    var idx = 0;
+
+    if (currNode && (targetNode.name === currNode.name)) {
+      currNode.name = updatedNode.name;
+      currNode.relationshiptype = updatedNode.relationshiptype
+      this.scaffoldTreeVisualization();
+    } else {
+      for (idx = 0; idx < numChildren; idx++) {
+        this.updateNodeInTree(targetNode, currNode.relationships[idx], updatedNode);
+      }
+    }
   }
 
-  findAndRemove(target, currNode, parentNode, foundIndex) {
+  /* Typically, this will be called with parentNode set to tree root and function recurses from there. */
+  deleteFromTree(targetNode, currNode, parentNode, foundIndex) {
     var numChildren = 0;
     if (currNode && currNode.relationships) {
       numChildren = currNode.relationships.length;
     }
     var idx = 0;
 
-    if (parentNode && currNode && (target.data.name === currNode.name)) {
+    if (parentNode && currNode && (targetNode.data.name === currNode.name)) {
       parentNode.relationships.splice(foundIndex, 1);
       this.scaffoldTreeVisualization();
     } else {
       for (idx = 0; idx < numChildren; idx++) {
-        this.findAndRemove(target, currNode.relationships[idx], currNode, idx);
+        this.deleteFromTree(targetNode, currNode.relationships[idx], currNode, idx);
       }
     }
-
   }
 
-  insertIntoTree(parent, child) {
+  insertIntoTree(targetNode, currNode, newChildNode) {
+    var numChildren = 0;
+    if (currNode && currNode.relationships) {
+      numChildren = currNode.relationships.length;
+    }
+    var idx = 0;
+
+    if (currNode && (targetNode.name === currNode.name)) {
+      currNode.relationships.push(newChildNode);
+      this.scaffoldTreeVisualization();
+    } else {
+      for (idx = 0; idx < numChildren; idx++) {
+        this.insertIntoTree(targetNode, currNode.relationships[idx], newChildNode);
+      }
+    }
   }
 
   highlightPathToRootMember(memberData) {
