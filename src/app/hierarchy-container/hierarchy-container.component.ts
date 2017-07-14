@@ -100,7 +100,7 @@ export class HierarchyContainerComponent implements OnInit {
         this.insertIntoTree(result.member, this.rawFamilyTreeJSON, result.newrelation);
       }
       if (result.action === "edit") {
-        this.updateNodeInTree(result.member, this.rawFamilyTreeJSON, result.updatedMember);
+        this.updateNodeInTree(result.node, this.rawFamilyTreeJSON, result.updatedNode);
       }
     })
   }
