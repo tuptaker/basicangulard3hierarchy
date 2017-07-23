@@ -8,18 +8,31 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
 import 'hammerjs';
+import { ListContainerComponent } from './list-container/list-container.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const appRoutes: Routes = [
+  { path: '', component: HierarchyContainerComponent },
+  { path: 'list-container', component: ListContainerComponent },
+  { path: 'hierarchy-container', component: HierarchyContainerComponent }
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     HierarchyContainerComponent,
-    DetailDialogComponent
+    DetailDialogComponent,
+    ListContainerComponent
   ],
   imports: [
     BrowserModule,
     MaterialModule,
     BrowserAnimationsModule,
-    FormsModule
+    FormsModule,
+        RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
   ],
   providers: [],
   bootstrap: [AppComponent],
