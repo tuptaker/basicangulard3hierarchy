@@ -1,11 +1,11 @@
-<p>test</p>
-<md-list>
-  <md-list-item>
-    <md-icon md-list-icon>close</md-icon>
-    <h3 md-line> test </h3>
-    <p md-line>
-      <span> testtest </span>
-      <span class="demo-2"> testytestytest </span>
-    </p>
-  </md-list-item>
+<md-list style="margin-left:20px;">
+  <div>
+    <md-list-item>
+      <md-icon md-list-icon>close</md-icon>
+      <h3 md-line>{{hierarchy.name}}</h3>
+    </md-list-item>
+    <div *ngFor="let relationship of hierarchy.relationships">
+      <app-list-container [hierarchy]="relationship"></app-list-container>
+    </div>
+  </div>
 </md-list>

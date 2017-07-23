@@ -30,8 +30,8 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     FormsModule,
         RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
+      appRoutes /* ,
+      { enableTracing: true } */ // <-- debugging purposes only
     )
   ],
   providers: [],

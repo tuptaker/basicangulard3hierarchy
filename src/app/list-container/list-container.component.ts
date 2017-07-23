@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import * as data from '../../assets/hierarchy.json';
 
 @Component({
@@ -7,14 +7,13 @@ import * as data from '../../assets/hierarchy.json';
   styleUrls: ['./list-container.component.css']
 })
 export class ListContainerComponent implements OnInit {
-  hierarchy = {relationships:[]};
+  @Input() hierarchy = (<any>data);
+  relationships = [];
 
   constructor() { 
   }
 
   ngOnInit() {
-    this.hierarchy = (<any>data);
-    console.log(this.hierarchy);
   }
 
 }
